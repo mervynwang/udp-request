@@ -1,15 +1,25 @@
-var udp = require('udp-request')
-var socket = udp()
+var udp = require('./index.js');
+var socket = udp({
+  timeout: 2000, 
+  retry: false
+});
 
-socket.on('request', function (request, peer) {
-  console.log('request:', request.toString())
-  socket.response('echo: ' + request.toString(), peer)
-})
 
-socket.listen(10000, function () {
-  socket.request('hello', {port: 10000, host: '127.0.0.1'}, function (err, response) {
-    if (err) throw err
-    console.log('response', response.toString())
-    socket.destroy()
-  })
-})
+
+var buf = new Buffer([0xF1, 0x00, 0x00, 0x00]);
+
+var onResponse = function (err, response, peer, request, opt) {
+	if (err) {
+		console.log(err);
+		return ;
+	}
+	
+	console.log('ip:port %s, response %o', peer.tid, response);
+	// socket.destroy();
+};
+
+socket.request(buf, {port: 10000, host: '52.87.156.45', debug: true}, onResponse);
+// socket.request(buf, {port: 10050, host: '52.87.156.45', debug: true}, onResponse);
+socket.request(buf, {port: 10200, host: '52.87.156.45', debug: true}, onResponse);
+
+

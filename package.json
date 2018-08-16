@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "inherits": "^2.0.3",
+    "ip-to-int": "^0.3.1",
     "passthrough-encoding": "^1.2.0"
   },
   "devDependencies": {
